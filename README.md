@@ -1,55 +1,53 @@
-# luIP-marzban
+# luIP-marzban (RU & Fixed)
 Limit users in each proxy configuration
 
 
 ## Introduction
 
-- [Mechanism](https://github.com/mmdzov/luIP-marzban/tree/main#mechanism)
-- [Features](https://github.com/mmdzov/luIP-marzban/tree/main#features)
-- [Requirements](https://github.com/mmdzov/luIP-marzban/tree/main#installation)
-  - [Install node.js](https://github.com/mmdzov/luIP-marzban/tree/main#install-nodejs)
-  - [Install iptables / gawk / csvtool](https://github.com/mmdzov/luIP-marzban/tree/main#install-other-requirements)
-- [Install luIP-marzban](https://github.com/mmdzov/luIP-marzban/tree/main#install-luip-marzban)
-- [Environments](https://github.com/mmdzov/luIP-marzban/tree/main#luip-marzbanenv-file)
-- [users.json](https://github.com/mmdzov/luIP-marzban/tree/main#usersjson)
-- [Permissions](https://github.com/mmdzov/luIP-marzban/tree/main#permission-to-use-ipbansh--ipunbansh)
-- [Run the project](https://github.com/mmdzov/luIP-marzban/tree/main#run-the-project)
-- [API Reference](https://github.com/mmdzov/luIP-marzban/tree/main#run-the-project)
-- [FAQ](https://github.com/mmdzov/luIP-marzban/tree/main#faq)
-- [Donate](https://github.com/mmdzov/luIP-marzban/tree/main#donate)
+- [Механизм](https://github.com/sm1ky/luIP-marzban/tree/main#mechanism)
+- [Функции](https://github.com/sm1ky/luIP-marzban/tree/main#features)
+- [Требования](https://github.com/sm1ky/luIP-marzban/tree/main#installation)
+  - [Установка node.js](https://github.com/sm1ky/luIP-marzban/tree/main#install-nodejs)
+  - [Установка ufw / dsniff / gawk / csvtool](https://github.com/sm1ky/luIP-marzban/tree/main#install-other-requirements)
+- [Установка luIP-marzban](https://github.com/sm1ky/luIP-marzban/tree/main#install-luip-marzban)
+- [Окружение](https://github.com/sm1ky/luIP-marzban/tree/main#luip-marzbanenv-file)
+- [users.json](https://github.com/sm1ky/luIP-marzban/tree/main#usersjson)
+- [Разрешение](https://github.com/sm1ky/luIP-marzban/tree/main#permission-to-use-ipbansh--ipunbansh)
+- [Запуск проекта](https://github.com/sm1ky/luIP-marzban/tree/main#run-the-project)
+- [API Reference](https://github.com/sm1ky/luIP-marzban/tree/main#run-the-project)
+- [FAQ](https://github.com/sm1ky/luIP-marzban/tree/main#faq)
+- [Пожертвовать](https://github.com/sm1ky/luIP-marzban/tree/main#donate)
 
 
-## Mechanism
+## Механизм
 
-The luIP-marzban project was created and developed based on node.js and uses the marzban api.
+Проект luIP-marzban был создан и разработан на основе node.js и использует API marzban.
 
-luip stores connected and authorized users in the sqlite database. Saving and updating users is done through websocket where traffic is intercepted by luIP-marzban and data including IPs are received from there.
+luIP хранит подключенных и авторизованных пользователей в базе данных sqlite. Сохранение и обновление пользователей происходит через веб-сокет, где трафик перехватывается luIP-marzban, и данные, включая IP-адреса, получаются оттуда.
 
-Users are updated through websocket and with a schedule based on the `FETCH_INTERVAL_LOGS_WS` variable located in `.env`
+Пользователи обновляются через веб-сокет и по расписанию на основе переменной `FETCH_INTERVAL_LOGS_WS`, расположенной в `.env`.
 
-Every x minutes, it is checked based on the `CHECK_INACTIVE_USERS_DURATION` variable: if the last update of a connected IP was y minutes, based on the `CHECK_INACTIVE_USERS_DURATION` variable, the user's IP will be removed from the connected list. And this possibility is provided so that space remains empty and other clients are allowed to connect
+Каждые x минут выполняется проверка на основе переменной `CHECK_INACTIVE_USERS_DURATION`: если последнее обновление подключенного IP было y минут назад, основываясь на переменной `CHECK_INACTIVE_USERS_DURATION`, IP-адрес пользователя будет удален из списка подключенных. И эта возможность предоставляется для того, чтобы оставалось свободное место, и другим клиентам разрешено подключаться.
 
-IPs are blocked via [iptables](https://www.digitalocean.com/community/tutorials/iptables-essentials-common-firewall-rules-and-commands), then incoming traffic on said IP is blocked for the duration specified in the `BAN_TIME` variable.
+IP блокируются через [ufw](https://help.ubuntu.ru/wiki/руководство_по_ubuntu_server/безопасность/firewall#ufw_-_простой_firewall), затем входящий трафик на этот IP блокируется на время, указанное в переменной `BAN_TIME`.
 
-Blocked IPs automatically in `blocked_ips.csv` file are stored, then every x minutes based on the value of the `CHECK_IPS_FOR_UNBAN_USERS` variable, the ipunban.sh file is executed and checks: if the stored IPs have been jailed for y minutes or more, they will be released from jail
+Заблокированные IP-адреса автоматически сохраняются в файле `blocked_ips.csv`, затем каждые x минут, основываясь на значении переменной `CHECK_IPS_FOR_UNBAN_USERS`, выполняется файл `ipunban.sh` и проверяет: если сохраненные IP-адреса были в тюрьме y минут или более, они будут выпущены из тюрьмы
 
+## Функции
 
-## Features
-
-- Automatic log
-- Connect to Telegram bot
+- Автоматические журналы (логи)
+- Работа с Telegram ботом 
 - API
-- Specific determination of users
-- Import/Export Backup
-- IP target
-- Marzban node support 
+- Определение конкретных пользователей
+- Импорт/Экспорт резевной копии пользователей
+- Блокировка по IP 
+- Поддержка [Marzban Node](https://github.com/Gozargah/Marzban-node)
 
-## Installation
+## Установка
 
-If you don't have node.js installed on your server, install it with nvm
+Если у вас нет установленного node.js на вашем сервере, установите его с помощью nvm
 
-
-#### Install Node.js
+#### Установка Node.js
 ```bash
   curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.38.0/install.sh | bash
   source ~/.bashrc
@@ -57,126 +55,127 @@ If you don't have node.js installed on your server, install it with nvm
 ```
 
 
-#### Install other requirements
+#### Установка других зависимостей
 
 ```bash
-  sudo apt-get install -y iptables
-  sudo apt-get install gawk
-  sudo apt-get install csvtool
+  sudo apt-get update
+  sudo apt-get install -y ufw
+  sudo apt-get install -y dsniff
+  sudo apt-get install -y gawk
+  sudo apt-get install -y csvtool
   npm install pm2 -g
 ```
 
 
-#### Install luIP-marzban
+#### Установка luIP-marzban
 ```bash
-  git clone https://github.com/mmdzov/luIP-marzban.git
+  git clone https://github.com/sm1ky/luIP-marzban.git
   cd luIP-marzban
   cp .env.example .env
   npm install
 ```
 
-## luIP-marzban/.env file
+## Файл .env для luIP-marzban
 ```bash
-  # Open the project folder, then execute the follow command
-  nano .env
+  # Откройте папку проекта, затем выполните следующую команду
+  nano .env или vim .nano
 ```
 
 
-#### Address configuration
+#### Конфигурация адреса Marzban
 | Parameter | Description                |
 | :-------- | :------------------------- |
-| `ADDRESS` | Your domain or sub domain. e.g: example.com or sub.example.com |
-| `PORT_ADDRESS` | Your domain port. e.g: 443 |
-| `SSL` | Did you get domain SSL? e.g: true or false |
+| `ADDRESS` | Ваш домен или поддомен. Например: example.com или sub.example.com (Поддерживает IP) |
+| `PORT_ADDRESS` | Порт вашего домена. Например: 443 |
+| `SSL` | Есть ли SSL на домене? Например: true или false |
 
 
-#### Marzban configuration
-
-| Parameter | Description                |
-| :-------- | :------------------------- |
-| `P_USER` | Enter the username of Marzban panel e.g: admin |
-| `P_PASS` | Enter the password of Marzban panel e.g: admin |
-
-#### App configuration
+#### Конфигурация Marzban 
 
 | Parameter | Description                |
 | :-------- | :------------------------- |
-| `MAX_ALLOW_USERS` | The maximum number of users that can connect to a proxy. e.g: 1 |
-| `BAN_TIME` | The length of time an IP is in jail based on minutes. e.g: 5 |
+| `P_USER` | Введите имя пользователя панели Marzban, например: admin |
+| `P_PASS` | Введите пароль панели Marzban, например: admin |
 
-#### Advance configuration
-
-| Parameter | Description                |
-| :-------- | :------------------------- |
-| `FETCH_INTERVAL_LOGS_WS` | Based on this, websocket logs are checked every x seconds to track traffic. e.g: 1 |
-| `CHECK_INACTIVE_USERS_DURATION` | It is checked every x minutes, users whose last update was x minutes ago or more are disabled. e.g: 5 |
-| `CHECK_IPS_FOR_UNBAN_USERS` | Every x minutes it checks all ips, if they are in prison for more than the time specified in `BAN_TIME`, they will be unbanned. e.g: 1 |
-| `SSH_PORT` | Enter your ssh port in this section. 22 is set by default |
-
-#### Telegram bot configuration
+#### Конфигурация luIP-marzban
 
 | Parameter | Description                |
 | :-------- | :------------------------- |
-| `TG_ENABLE` | If you want to use Telegram bot for logs, set this value to `true` |
-| `TG_TOKEN` | The bot token you received from @botfather |
-| `TG_ADMIN` | Your user ID that you received from @userinfobot |
+| `MAX_ALLOW_USERS` | Максимальное количество пользователей, которые могут подключиться к прокси, например: 1 |
+| `BAN_TIME` | Продолжительность времени, в течение которой IP находится в бане в минутах, например: 5 |
+
+#### Расширенная конфигурация
+
+| Parameter | Description                |
+| :-------- | :------------------------- |
+| `FETCH_INTERVAL_LOGS_WS` | На его основе каждые x секунд проверяются журналы веб-сокета для отслеживания трафика, например: 1 |
+| `CHECK_INACTIVE_USERS_DURATION` | Каждые x минут проверяются пользователи, последнее обновление которых было x минут назад или ранее, например: 5 |
+| `CHECK_IPS_FOR_UNBAN_USERS` | Каждые x минут проверяются все IP-адреса, если они находятся в бане больше времени, указанного в BAN_TIME, они будут разблокированы, например: 1 |
+| `SSH_PORT` | Введите свой порт ssh в этом разделе. 22 установлен по умолчанию |
+
+#### Конфигурация Telegram бота
+
+| Parameter | Description                |
+| :-------- | :------------------------- |
+| `TG_ENABLE` | Если вы хотите использовать бота Telegram для логов, установите этому значению `true` |
+| `TG_TOKEN` | Токен бота, который вы получили от @botfather |
+| `TG_ADMIN` | Ваш идентификатор пользователя, который вы получили от @userinfobot |
 
 ## users.json 
-You can set specific users in the users.json file
+Вы можете установить конкретных пользователей в файле users.json
 
-- Priority is always with this file
+- Приоритет всегда у этого файла
 
-In the example below, email1 is the proxy name and 2 represents the maximum number of users that can be connected.
+В приведенном ниже примере admin - это имя прокси, и 2 представляет максимальное количество пользователей, которые могут быть подключены.
 
 #### luIP-marzban/users.json
 ```json
   [
-    ["email1", 2],
-    ["email2", 10]
+    ["admin", 2],
+    ["user", 10]
   ]
 ```
 
-## Permission to use ipban.sh && ipunban.sh
+## Разрешение на использование ipban.sh && ipunban.sh && restore_banned_ips.sh && unbanall.sh
 In order for the file to work, permission must be obtained to use it
 ```bash
-  # Open the project folder, then execute the follow command
+  # Откройте папку проекта, затем выполните следующую команду
   chmod +x ./ipban.sh
   chmod +x ./ipunban.sh
   chmod +x ./restore_banned_ips.sh
+  chmod +x ./unbanall.sh
 ```
 
 
-## Run the project
-After configuring the project, run it
+## Запуск проекта
+После настройки проекта запустите его
 ```bash
-  # Open the project folder, then execute the follow command
+  # Откройте папку проекта, затем выполните следующую команду
   npm start
 
 ```
 
-## Stop luIP with kill process
+## Остановка luIP
 
-You can run the command below, but whenever you want, you can go to the project path [ `cd /luIP-marzban` ] and type `npm start`, luIP will run again.
+Вы можете выполнить команду ниже, но когда угодно вы можете перейти в путь проекта [ `cd /luIP-marzban` ] и ввести `npm start`, luIP снова запустится.
 
 ```bash
 pm2 kill
-pm2 flush # Deletes the log
+pm2 flush # Удаляет логи
 ```
 
-## Checking blocked IPs
+## Проверка заблокированных IP-адресов
 
 ```bash
-iptables -L -n
+sudo ufw status numbered | awk '/DENY/ {print $4}'
 ```
 
-## Unblock all IPs
-First, empty blocked_ips.csv, then run the following command
+## Разблокировать все IP-адреса
 ```bash
-iptables -F
+bash ./unbanall.sh
 ```
 
-## Uninstall
-
+## Удаление
 ```bash
 pm2 kill
 sudo rm -rf /luIP-marzban
@@ -185,67 +184,67 @@ sudo rm -rf /luIP-marzban
 
 ## API Reference
 
-We get to know the following environment variables that are located in the .env file by default.
+Мы узнаем следующие переменные среды, которые расположены в файле .env по умолчанию.
 
-##### When you use the api, the data will be stored in a file called `users.csv`, and this file has a higher priority in reading than `MAX_ALLOW_USERS` and `users.json`, just as `users.json` has a higher priority than `MAX_ALLOW_USERS`.
+##### При использовании api данные будут сохранены в файле с именем users.csv, и этот файл имеет более высокий приоритет при чтении, чем MAX_ALLOW_USERS и users.json, так же как users.json имеет более высокий приоритет, чем MAX_ALLOW_USERS.
 
 
 | Parameter | Description                |
 | :-------- | :------------------------- |
-| `API_ENABLE` | If you want to use api, set the value of this variable equal to `true` |
-| `API_SECRET` | Short secret for access_token. The encryption type of access_tokens is AES, and only the expiration date of the token is included in the access_token. secret is a password to encrypt and decrypt access_token with AES encryption type. |
-| `API_PATH` | Displays api path by default /api |
-| `API_LOGIN` | Enter a desired username and password in the username:password format so that you can be identified to receive the token |
-| `API_EXPIRE_TOKEN_AT` | Each access_token you receive has an expiration date. You can set it here |
-| `API_PORT` | Choose a port for your api address. Also make sure it is not occupied. By default 4000 |
+| `API_ENABLE` | Если вы хотите использовать API, установите значение этой переменной равным `true` |
+| `API_SECRET` | Краткий секрет для access_token. Тип шифрования access_token - AES, и в access_token включается только срок действия токена. secret - это пароль для шифрования и дешифрования access_token с использованием AES. |
+| `API_PATH` | Отображает путь api по умолчанию /api |
+| `API_LOGIN` | Введите желаемое имя пользователя и пароль в формате username:password, чтобы вы могли авторизоваться для получения токена |
+| `API_EXPIRE_TOKEN_AT` | У каждого полученного access_token есть срок действия. Вы можете установить его здесь |
+| `API_PORT` | Выберите порт для вашего api-адреса. Также убедитесь, что он не занят. По умолчанию 3000 |
 
 Your default api address: https://example.com:4000/api
 
-#### Get access_token
+#### Получение access_token
 
 ```http
   POST /api/token
 ```
 
-| Parameter | Type     | Description                |
+| Параметр | Тип     | Описание                |
 | :-------- | :------- | :------------------------- |
-| `username` | `string` | **Required**. Your `API_LOGIN` username |
-| `password` | `string` | **Required**. Your `API_LOGIN` password |
+| `username` | `string` | **Обязательно**. Ваше имя пользователя `API_LOGIN` |
+| `password` | `string` | **Обязательно**. Ваш пароль `API_LOGIN` |
 
 
-#### Note: In all the following apis, send the value of api_key: YOUR_ACCESS_TOKEN as header. (Fill YOUR_ACCESS_TOKEN with the value you received from /api/token)
+#### Примечание: Во всех следующих API отправляйте значение api_key: YOUR_ACCESS_TOKEN в заголовке. (Замените YOUR_ACCESS_TOKEN на значение, которое вы получили из /api/token)
 
-#### Add user
+#### Добавить пользователя
 
 ```http
   POST /api/add
 ```
 
-| Parameter | Type     | Description                       |
+| Параметр | Тип     | Описание                       |
 | :-------- | :------- | :-------------------------------- |
-| `email`      | `string` | **Required**. The name of your target config. For example test |
-| `limit`      | `number` | **Required**. What is the maximum limit? |
+| `email`      | `string` | **Обязательно**. Имя пользователя. Например: admin |
+| `limit`      | `number` | **Обязательно**. Сколько одновременно подключений может быть? |
 
-#### Update user
+#### Обновить пользователя
 
 ```http
   POST /api/update
 ```
 
-| Parameter | Type     | Description                       |
+| Параметр | Тип     | Описание                       |
 | :-------- | :------- | :-------------------------------- |
-| `email`      | `string` | **Required**. The name of your target config. For example test |
-| `limit`      | `number` | **Required**. What is the maximum limit? |
+| `email`      | `string` | **Обязательно**. Имя пользователя. Например: admin |
+| `limit`      | `number` | **Обязательно**. Сколько одновременно подключений может быть? |
 
-#### Delete user
+#### Удалить пользователя
 
 ```http
   GET /api/delete/<email>
 ```
 
-| Parameter | Type     | Description                       |
+| Параметр | Тип     | Описание                       |
 | :-------- | :------- | :-------------------------------- |
-| `email`      | `string` | **Required**. The name of your target config. For example test |
+| `email`      | `string` | **Обязательно**. Имя пользователя. Например: admin |
 
 #### Clear luIP database
 
@@ -255,24 +254,26 @@ Your default api address: https://example.com:4000/api
 
 
 
-## FAQ
+## Часто задаваемые вопросы
 
-#### If there are changes in marzban-node, should I restart luIP?
+#### Если есть изменения в marzban-node, нужно ли перезапускать luIP?
 
-Yes, to apply the changes, it is necessary to restart luIP through the following command
+Да, чтобы применить изменения, необходимо перезапустить luIP с помощью следующей команды
 
 ```bash
-# first Open the project dir with follow command
+# Сначала откройте папку проекта с помощью следующей команды
 cd /luIP-marzban
 
-# then run follow command
+# Затем выполните следующуюкоманду
 pm2 kill
 npm start
 ```
 
-## Donate
-If you like it and it works for you, you can donate to support, develop and improve luIP-marzban. We wish the best for you
+## Пожертвовать
+Если вам нравится и это работает для вас, вы можете сделать пожертвование на поддержку, разработку и улучшение luIP-marzban для русскоговорящих людей. Желаем вам всего наилучшего
 
 1. Tron: `TLqwdoHRdV44QryvWsvaKn53MyN5wbRqZ6`
 
-1. Ton: `0x6AB03eF392da65cc0ce2A3688949Fe756eD156c0`
+## Автор оригинального скрипта и репозиторий
+[Автор: mmdzdov](https://github.com/mmdzov)
+[Репозиторий: luIP-marzban](https://github.com/mmdzov/luIP-marzban)
