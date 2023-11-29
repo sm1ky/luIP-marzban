@@ -1,5 +1,7 @@
 const fs = require("fs");
 const { spawn } = require("child_process");
+const axios = require("axios");
+const { join } = require("path");
 
 function banIP(ip, email) {
   const scriptPath = "./ipban.sh";
@@ -32,9 +34,9 @@ Duration: ${process.env.BAN_TIME} minutes
 class User {
   /**
    * @param {string} data Raw websocket data
-   * @returns {NewUserIpType[]}
+   * @returns {Promise<NewUserIpType[]>}
    */
-  GetNewUserIP = (data) => {
+  GetNewUserIP = async (data) => {
     let lines = data
       .split(/\d{4}\/\d{2}\/\d{2} \d{2}:\d{2}:\d{2}/g)
       .map((item) => item.trim())
@@ -42,22 +44,48 @@ class User {
 
     lines = lines.filter((item) => item.includes("accepted"));
 
-    if (!lines.length === 0) return [];
+    if (lines.length === 0) return [];
 
-    const getIp = (params) => {
+    const getIp = async (params) => {
       const chunks = params.split(":");
 
       if (/[a-zA-Z]/g.test(params)) chunks.shift();
 
+      // try {
+      //   const { data } = await axios.get(`http://ip-api.com/json/${chunks[0]}`);
+
+      //   if (  
+      //     data.countryCode !==
+      //     (process.env?.COUNTRY_CODE?.toUpperCase() || "IR")
+      //   )
+      //     return {};
+      // } catch (e) {
+      //   console.error(e);
+      //   return {};
+      // }
+
       return { ip: chunks[0], port: chunks[1] };
     };
 
-    lines = lines.map((item) => ({
-      ...getIp(item.split(" ")[0]),
-      email: item.split(" ").slice(-1)[0].replace(/\d\./g, ""),
-    }));
+    let newLines = [];
 
-    return lines.reduce((prev, curr) => {
+    for (let i in lines) {
+      const item = lines[i];
+      const res = await getIp(item.split(" ")[0]);
+
+      if (Object.keys(res).length === 0) continue;
+
+      newLines.push({
+        ...res,
+        email: item.split(" ").slice(-1)[0].replace(/\d\./g, ""),
+      });
+    }
+
+    // console.log("lines", lines);
+
+    // console.log("newLines Before", newLines);
+
+    return newLines.reduce((prev, curr) => {
       const index = prev.findIndex((item) => item.ip === curr.ip);
       if (index !== -1) prev[index] = curr;
       else prev.push(curr);
@@ -127,7 +155,7 @@ class Server {
    * @param {boolean} api Return address with api
    * @returns {string}
    */
-  CleanAddress(address, api = true, showHttp = true) {
+  CleanAddress(address, api = true, showHttp = true, socket = false) {
     const [ADDRESS, port] = address.split(":");
 
     let _address = address;
@@ -139,6 +167,7 @@ class Server {
       else _address = `http://${_address}`;
 
     if (api) _address += "/api";
+    if (socket) _address += process.env.LISTEN_PATH;
 
     return _address;
   }
@@ -147,14 +176,14 @@ class Server {
 class File {
   constructor() {}
 
-  ForceExistsFile(path, data = undefined) {
-    if (!fs.existsSync(path)) fs.writeFileSync(path, data);
+  ForceExistsFile(path, data) {
+    if (!fs.existsSync(path)) fs.writeFileSync(path, data || "");
 
     return;
   }
 
-  GetJsonFile(path) {
-    this.ForceExistsFile(path);
+  GetJsonFile(path,replace) {
+    this.ForceExistsFile(path,replace);
 
     return JSON.parse(fs.readFileSync(path));
   }
@@ -166,74 +195,4 @@ class File {
   }
 }
 
-/**
- * @description IP Guard
- */
-class IPGuard {
-  constructor(banDB) {
-    this.banDB = banDB;
-  }
-
-  /**
-   *
-   * @param {IPSDataType} record A user's record includes email, ips array
-   * @param {function[]} callback Return function to allow ip usage
-   *
-   * @returns {void | Promise<Function>}
-   */
-  async use(ip, ...callback) {
-    const data = await callback[0]();
-
-    if (!data) return await callback[1]();
-
-    const indexOfIp = data.ips.findIndex((item) => item.ip === `${ip}`);
-
-    const users = new File().GetJsonFile("users.json");
-    let usersCsv = new File().GetCsvFile("users.csv").toString();
-
-    if (usersCsv.trim()) {
-      usersCsv = usersCsv.split("\r\n").map((item) => item.split(","));
-    }
-
-    if (usersCsv && usersCsv.some((item) => item[0] === data.email) === false)
-      usersCsv = null;
-
-    let userCsv = null;
-    if (usersCsv.trim())
-      userCsv = usersCsv.filter((item) => item[0] === data.email)[0] || null;
-
-    const user = users.filter((item) => item[0] === data.email)[0] || null;
-
-    const maxAllowConnection = userCsv
-      ? +userCsv[1]
-      : user
-      ? +user[1]
-      : +process.env.MAX_ALLOW_USERS;
-
-    const limited = data.ips.length > maxAllowConnection;
-
-    // Remove last user from db
-    if (indexOfIp !== -1 && limited) {
-      return callback[2]();
-    }
-
-    //
-    if (data.ips.length >= maxAllowConnection && indexOfIp === -1) {
-      this.ban({ ip, email: data.email });
-
-      return;
-    }
-
-    return await callback[1]();
-  }
-
-  /**
-   * @param {BanIpConfigAddType} params
-   */
-  ban(params) {
-    banIP(`${params.ip}`, params.email);
-    // console.log("ban", params);
-  }
-}
-
-module.exports = { User, Server, File, IPGuard };
+module.exports = { User, Server, File, banIP };

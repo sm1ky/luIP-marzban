@@ -11,8 +11,8 @@ function check_ip() {
     local block_time_seconds=$((end_time - current_time))
 
     if ((block_time_seconds <= 0)); then
-      if iptables -C INPUT -s $ip -j DROP &> /dev/null; then
-        iptables -D INPUT -s $ip -j DROP
+      if ufw status | grep -q $ip; then
+        ufw delete deny from $ip
         echo "Unbanned IP: $ip"
       fi
 

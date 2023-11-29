@@ -3,10 +3,12 @@ const { File } = require("../utils");
 const { join } = require("path");
 const fs = require("fs");
 const { response } = require("./utils");
+const DBSqlite3 = require("../db/DBSqlite3");
 
 class Model {
   constructor() {
     this.usersCsvPath = join(__dirname, "../", "users.csv");
+    this.usersJsonPath = join(__dirname, "../", "users.json");
   }
 
   token() {
@@ -35,9 +37,7 @@ class Model {
    */
 
   add(data) {
-    let file = new File().GetCsvFile(this.usersCsvPath).toString();
-
-    file = file.split("\r\n").map((item) => item.split(","));
+    let file = new File().GetJsonFile(this.usersJsonPath);
 
     if (file.some((item) => item[0] === data.email) === true)
       return response({
@@ -47,11 +47,9 @@ class Model {
         },
       });
 
-    const dataToCsv = `${data.email},${data.limit}\r\n`;
+    file.push([data.email, data.limit]);
 
-    file += dataToCsv;
-
-    fs.writeFileSync(this.usersCsvPath, file);
+    fs.writeFileSync(this.usersJsonPath, JSON.stringify(file));
 
     return response({
       status: 1,
@@ -67,14 +65,15 @@ class Model {
    */
 
   update(data) {
-    let file = new File().GetCsvFile(this.usersCsvPath).toString();
+    let file = new File().GetJsonFile(this.usersJsonPath);
 
-    let emails = file
-      .split("\r\n")
-      .filter((item) => item.trim())
-      .map((item) => [item.split(",")[0], item.split(",")[1]]);
+    let check = false;
+    for (const el of file) {
+      if (el.includes(data.email))
+      {check = true};
+    }
 
-    if (!file.includes(data.email))
+    if (check === false)
       return response({
         error: {
           type: "NOT_FOUND",
@@ -82,15 +81,13 @@ class Model {
         },
       });
 
-    const index = emails.findIndex((item) => item[0] === data.email);
+    file = file.map( el => {
+      if (el.includes(data.email)) {
+        return [data.email, data.limit]
+      } else return el
+    })
 
-    emails[index][1] = data.limit;
-
-    emails = emails.map((item) => `${item[0]},${item[1]}`);
-
-    emails = emails.join("\r\n");
-
-    fs.writeFileSync(this.usersCsvPath, emails);
+    fs.writeFileSync(this.usersJsonPath, JSON.stringify(file));
 
     return response({
       status: 1,
@@ -104,11 +101,15 @@ class Model {
    * @param {ApiAddDataType} data
    */
   delete(data) {
-    let file = new File().GetCsvFile(this.usersCsvPath).toString();
+    let file = new File().GetJsonFile(this.usersJsonPath);
 
-    let emails = file.split("\r\n").filter((item) => item.trim());
+    let check = false;
+    for (const el of file) {
+      if (el.includes(data.email))
+      {check = true};
+    }
 
-    if (!file.includes(data.email))
+    if (check === false)
       return response({
         error: {
           type: "NOT_FOUND",
@@ -116,19 +117,49 @@ class Model {
         },
       });
 
-    emails = emails.filter((item) => item.split(",")[0] !== data.email);
+    file = file.filter( el => {
+      if (el.includes(data.email))
+      {
+        return false;
+      } else {return true}
+    })
 
-    emails = emails.join("\r\n");
-
-    fs.writeFileSync(this.usersCsvPath, emails);
+    fs.writeFileSync(this.usersJsonPath, JSON.stringify(file));
 
     return response({
       status: 1,
     });
   }
 
+  async getUser(email) {
+    const db = new DBSqlite3();
+
+    let user = null;
+
+    try {
+      user = await db.read(email);
+    } catch (e) {
+
+      return response({
+        error: {
+          type: "NOT_FOUND",
+          reason: "This email does not exist",
+        },
+      });
+    }
+
+    return response({
+      data: {
+        email,
+        ips: user.ips,
+        connections: user.ips.length,
+      },
+      status: 1,
+    });
+  }
+
   clear() {
-    fs.writeFileSync(this.usersCsvPath, "");
+    fs.writeFileSync(this.usersJsonPath, "");
 
     return response({
       status: 1,
