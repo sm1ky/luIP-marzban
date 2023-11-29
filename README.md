@@ -1,8 +1,9 @@
 # luIP-marzban (RU & Fixed)
-Limit users in each proxy configuration
+Лимитные подключения пользователей для прокси на базе Xray. Панель [Marzban](https://github.com/Gozargah/Marzban)
 
+Сообщество где можно попросить помощи - [Telegram чат](https://t.me/gozargah_marzban) 
 
-## Introduction
+## Инструкции
 
 - [Механизм](https://github.com/sm1ky/luIP-marzban/tree/main#mechanism)
 - [Функции](https://github.com/sm1ky/luIP-marzban/tree/main#features)
@@ -272,8 +273,9 @@ npm start
 ## Пожертвовать
 Если вам нравится и это работает для вас, вы можете сделать пожертвование на поддержку, разработку и улучшение luIP-marzban для русскоговорящих людей. Желаем вам всего наилучшего
 
-1. Tron: `TLqwdoHRdV44QryvWsvaKn53MyN5wbRqZ6`
+1. Tron: `TSrhAJEYqYHzuGYjsUqC46mmCx7Jp27dvX`
+2. Тинькофф: `2200700951484392`
 
 ## Автор оригинального скрипта и репозиторий
-[Автор: mmdzdov](https://github.com/mmdzov)
-[Репозиторий: luIP-marzban](https://github.com/mmdzov/luIP-marzban)
+Автор: [mmdzdov](https://github.com/mmdzov)
+Репозиторий: [luIP-marzban](https://github.com/mmdzov/luIP-marzban)
