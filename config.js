@@ -82,7 +82,14 @@ class Ws {
 
       if (data.length === 0) return;
 
-      console.log(`Update ${new Date().toLocaleString("fa-IR")} : `, data);
+      for (const item of data) {
+      if (/[^\[\]]/.test(item.email)) {
+          console.error("Email/user should not contain [ or ] characters");
+          return;
+        }
+      }
+
+      console.log(`Update ${new Date().toLocaleString("ru-RU")} : `, data);
 
       let num = data.length;
       while (num--) {
