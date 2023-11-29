@@ -276,6 +276,6 @@ npm start
 1. Tron: `TSrhAJEYqYHzuGYjsUqC46mmCx7Jp27dvX`
 2. Тинькофф: `2200700951484392`
 
-## Автор оригинального скрипта и репозиторий
+## Автор оригинального скрипта и его репозиторий
 Автор: [mmdzdov](https://github.com/mmdzov)
 Репозиторий: [luIP-marzban](https://github.com/mmdzov/luIP-marzban)
