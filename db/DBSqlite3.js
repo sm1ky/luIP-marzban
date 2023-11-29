@@ -67,6 +67,7 @@ class DBSqlite3 extends DBInterface {
   addIp(email, ipData) {
     // Do not continue if the email is empty
     if (!email?.trim()) return;
+    if (!ipData?.ip) return;
 
     db.serialize(() => {
       // Find user based on email
@@ -87,7 +88,9 @@ class DBSqlite3 extends DBInterface {
           const indexOfIp = ips.findIndex((item) => item.ip === ipData.ip);
 
           // Get the users.json file
-          const usersJson = new File().GetJsonFile(join("users.json"));
+          const usersJson = new File().GetJsonFile(
+            join(__dirname, "../", "users.json"),
+          );
           const indexOfUser = usersJson.findIndex((item) => item[0] === email);
 
           const userJson = usersJson[indexOfUser] || [
@@ -185,17 +188,27 @@ class DBSqlite3 extends DBInterface {
     });
   }
 
+  deleteUser(email) {
+    db.run("DELETE FROM users WHERE email = ?", email, function (err) {
+      if (err) {
+        console.log(err);
+      } else {
+        console.log("Successfully deleted email from db.sqlite");
+      }
+    });
+  }
+
   deleteInactiveUsers() {
     const currentTime = new Date().getTime();
-    const fewMinutesAgo = new Date(
+    const fewMinutesLater = new Date(
       currentTime - +process.env.CHECK_INACTIVE_USERS_DURATION * 60 * 1000,
     );
-    // console.log(fewMinutesAgo.toISOString());
+    // console.log(fewMinutesLater.toISOString());
 
     db.serialize(function () {
       db.all(
         `SELECT * FROM users WHERE json_extract(ips, '$[0].date') <= ?`,
-        fewMinutesAgo.toISOString().toString(),
+        fewMinutesLater.toISOString().toString(),
         function (err, rows) {
           if (err) {
             console.error(err);
@@ -208,7 +221,7 @@ class DBSqlite3 extends DBInterface {
 
             const updatedIds = ips.filter(function (id) {
               const idDate = new Date(id.date);
-              return idDate > fewMinutesAgo;
+              return idDate > fewMinutesLater;
             });
 
             // console.log("updateIds", updatedIds);
