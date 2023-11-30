@@ -7,7 +7,6 @@ const DBSqlite3 = require("../db/DBSqlite3");
 
 class Model {
   constructor() {
-    this.usersCsvPath = join(__dirname, "../", "users.csv");
     this.usersJsonPath = join(__dirname, "../", "users.json");
   }
 
@@ -73,25 +72,23 @@ class Model {
       {check = true};
     }
 
-    if (check === false)
+    if (check === false) {
+      file.push([data.email, data.limit]);
+
+      fs.writeFileSync(this.usersJsonPath, JSON.stringify(file));
+    } else {
+      file = file.map( el => {
+        if (el.includes(data.email)) {
+          return [data.email, data.limit]
+        } else return el
+      })
+
+      fs.writeFileSync(this.usersJsonPath, JSON.stringify(file));
+
       return response({
-        error: {
-          type: "NOT_FOUND",
-          reason: "This email does not exist",
-        },
+        status: 1,
       });
-
-    file = file.map( el => {
-      if (el.includes(data.email)) {
-        return [data.email, data.limit]
-      } else return el
-    })
-
-    fs.writeFileSync(this.usersJsonPath, JSON.stringify(file));
-
-    return response({
-      status: 1,
-    });
+    }
   }
 
   /**
