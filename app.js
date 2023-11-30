@@ -24,7 +24,10 @@ def();
 const socket = new Socket({
   server,
   callback: (socket) => {
-    console.log("Connected to socket server.");
+    // console.log("Start socket server [app.js].");
+    const clientIp = socket.handshake.address;
+    const ipv4Address = clientIp.includes('::ffff:') ? clientIp.split('::ffff:')[1] : clientIp;
+    console.log(`[SOCKET.IO LOG] Client connected from IP: ${ipv4Address}`);
   },
 });
 
@@ -93,6 +96,7 @@ if (process.env.NODE_ENV.includes("production")) {
     nodeCron.schedule(
       `*/${process.env.CHECK_IPS_FOR_UNBAN_USERS} * * * *`,
       () => {
+
         socket.UnbanIP();
 
         exec("bash ./ipunban.sh", (error, stdout, stderr) => {

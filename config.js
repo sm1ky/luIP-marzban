@@ -82,14 +82,7 @@ class Ws {
 
       if (data.length === 0) return;
 
-      for (const item of data) {
-      if (/[^\[\]]/.test(item.email)) {
-          console.error("Email/user should not contain [ or ] characters");
-          return;
-        }
-      }
-
-      console.log(`Update ${new Date().toLocaleString("ru-RU")} : `, data);
+      console.log(`Update ${new Date()} : `, data);
 
       let num = data.length;
       while (num--) {
@@ -264,17 +257,40 @@ class Socket {
   Auth(socket, next) {
     const apiKey = socket.handshake.query.api_key;
 
-    let decryptedKey = crypto.AES.decrypt(
-      apiKey,
-      process.env.API_SECRET,
-    ).toString(crypto.enc.Utf8);
+    if (!apiKey) {
+        console.error('API Key is empty or undefined');
+        return next(new Error('Authentication error'));
+    }
 
-    const parseKey = JSON.parse(decryptedKey);
+    let decryptedKey;
+    try {
+        decryptedKey = crypto.AES.decrypt(
+            apiKey,
+            process.env.API_SECRET,
+        ).toString(crypto.enc.Utf8);
+    } catch (error) {
+        console.error('Error during decryption:', error);
+        return next(new Error('Authentication error'));
+    }
 
-    if (Date.now() > +parseKey.expireAt)
-      return next(new Error("Authentication error"));
+    console.log('Decrypted Key:', decryptedKey);
 
-    next();
+    if (!decryptedKey) {
+        console.error('Decrypted Key is empty or undefined');
+        return next(new Error('Authentication error'));
+    }
+
+    try {
+        const parseKey = JSON.parse(decryptedKey);
+
+        if (Date.now() > +parseKey.expireAt)
+            return next(new Error('Authentication error'));
+
+        next();
+    } catch (error) {
+        console.error('Error parsing JSON:', error);
+        return next(new Error('Authentication error'));
+    }
   }
 
   /**
@@ -287,18 +303,26 @@ class Socket {
    * @returns {void}
    */
   BanIP(args) {
-    if (!this.connected) return;
+    if (!this.connected) {
+      console.log(`Failed send ban ip to node, socket not connected`)
+      return;
+    }
 
     this.socket.emit("user:ip:ban", JSON.stringify(args));
+    console.log(`Sent ban IP to node`);
   }
 
   /**
    * @returns {void}
    */
   UnbanIP() {
-    if (!this.connected) return;
+    if (!this.connected) {
+      console.log(`Failed send unban ip to node, socket not connected`)
+      return;
+    }
 
     this.socket.emit("user:ip:unban", JSON.stringify({}));
+    console.log(`Sent unban IP to node`);
   }
 }
 
