@@ -23,9 +23,9 @@ def();
 
 const socket = new Socket({
   server,
-  callback: (socket) => {
-    // console.log("Start socket server [app.js].");
-    const clientIp = socket.handshake.address;
+  callback: (io) => {
+    console.log("Start new socket server [app.js].");
+    const clientIp = io.handshake.address;
     const ipv4Address = clientIp.includes('::ffff:') ? clientIp.split('::ffff:')[1] : clientIp;
     console.log(`[SOCKET.IO LOG] Client connected from IP: ${ipv4Address}`);
   },
