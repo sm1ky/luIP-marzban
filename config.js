@@ -88,17 +88,21 @@ class Ws {
       while (num--) {
         const item = data[num];
 
-        await this.ipGuard.use(
-          item.ip,
-          () => this.db.read(item.email),
-          () =>
-            this.db.addIp(item.email, {
-              ip: item.ip,
-              port: item.port,
-              date: new Date().toISOString().toString(),
-            }),
-          () => this.db.deleteLastIp(item.email),
-        );
+        if (item.email.toLowerCase() === "api]") {
+          console.log(`Notification: Received data for "api]" email. SKIP`);
+        } else {
+          await this.ipGuard.use(
+            item.ip,
+            () => this.db.read(item.email),
+            () =>
+              this.db.addIp(item.email, {
+                ip: item.ip,
+                port: item.port,
+                date: new Date().toISOString().toString(),
+              }),
+            () => this.db.deleteLastIp(item.email),
+          );
+        }
       }
     });
     return this;
@@ -237,12 +241,41 @@ class Socket {
      *
      * @type {SocketServer}
      */
+    // console.log("this.socket:", this.socket);
+    // if (!(this.socket instanceof socket.Server)) {
+    //     console.error("this.socket is not an instance of socket.Server");
+    //     return;
+    // }
+    // const nsp = this.socket.of(process.env?.LISTEN_PATH);
+
+    // nsp.use(this.Auth)
+    //   .on("connection", (socket) => {
+    //       this.connected = socket.connected;
+    //       args.callback(socket);
+    //   });
     this.socket = new socket.Server(args.server, {
-      cors: {
-        origin: args?.corsOrigin || [],
-      },
       ...args.options,
     });
+    // this.socket = new Socket(args.server, {
+    //   query: {
+    //     api_key: this.api_key,
+    //   },
+    //   retries: 60,
+    // });
+  
+    // console.log("this.socket:", this.socket);
+  
+    // if (!(this.socket instanceof socket.Server)) {
+    //   console.error("this.socket is not an instance of socket.Server");
+    //   return;
+    // }
+  
+    // const nsp = this.socket.of(process.env?.LISTEN_PATH);
+  
+    // nsp.use(this.Auth).on("connection", (socket) => {
+    //   this.connected = socket.connected;
+    //   args.callback(socket);
+    // });
 
     this.socket
       .of(process.env?.LISTEN_PATH)
@@ -255,7 +288,10 @@ class Socket {
   }
 
   Auth(socket, next) {
-    const apiKey = socket.handshake.query.api_key;
+    // console.log(`REQUESTS`);
+    // console.log('Received headers:', socket.handshake.headers);
+    // console.log('Received handshake:', socket.handshake);
+    const apiKey = socket.handshake.headers.api_key;
 
     if (!apiKey) {
         console.error('API Key is empty or undefined');
