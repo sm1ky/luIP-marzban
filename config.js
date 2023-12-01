@@ -436,13 +436,12 @@ class IPGuard {
       : +process.env.MAX_ALLOW_USERS;
 
     const limited = data.ips.length > maxAllowConnection;
-
-    // Remove last user from db
+    
     if (indexOfIp !== -1 && limited) {
       return callback[2]();
     }
 
-    console.log(data.ips.length, maxAllowConnection, indexOfIp);
+    console.log(`Num IP: ${data.ips.length} | Max: ${maxAllowConnection} | IP: ${ip} | USER: ${data.email}`);
 
     if (data.ips.length >= maxAllowConnection && indexOfIp === -1) {
       if (process.env?.TARGET === "PROXY") {
