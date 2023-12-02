@@ -468,7 +468,7 @@ class IPGuard {
       if (process.env.TG_ENABLE === "true")
         globalThis.bot.api.sendMessage(
           process.env.TG_ADMIN,
-          "Пользователь <code>" + email + "</code>: IP <code>" + ip + "</code> заблокирован.\nВремя: " + process.env.BAN_TIME + " минут(ы)",
+          "Пользователь <code>" + data.email + "</code>: IP <code>" + ip + "</code> заблокирован.\nВремя: " + process.env.BAN_TIME + " минут(ы)",
           { parse_mode: "HTML" }
         );
     
