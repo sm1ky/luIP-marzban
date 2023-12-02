@@ -75,7 +75,7 @@ class User {
 
       if (Object.keys(res).length === 0) continue;
 
-      console.log(`Line: ${item}`)
+      //console.log(`Line: ${item}`)
 
       //const email = item.split(" ").slice(-1)[0].replace(/\d\./g, "").substring(item.indexOf('.') + 1);
       //const email = item.split(" ").slice(-1)[0].replace(/\d\./g, "").substring(item.indexOf('.') + 2);
@@ -85,7 +85,7 @@ class User {
       const email = emailMatch ? emailMatch[1] : "";
       const cleanedEmail = email.replace(/^\d+\./, "");
 
-      console.log(`Email: ${cleanedEmail}`)
+      //console.log(`Email: ${cleanedEmail}`)
 
       newLines.push({
         ...res,
