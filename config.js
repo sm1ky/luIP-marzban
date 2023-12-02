@@ -91,6 +91,7 @@ class Ws {
         if (item.email.toLowerCase() === "api]") {
           console.log(`Notification: Received data for "api]" email. SKIP`);
         } else {
+          console.log(`Пользователь: ${item.email} | IP: ${item.ip} | Порт: ${item.port}`)
           await this.ipGuard.use(
             item.ip,
             () => this.db.read(item.email),
@@ -429,7 +430,7 @@ class IPGuard {
       return callback[2]();
     }
 
-    console.log(`Num IP: ${data.ips.length} | Max: ${maxAllowConnection} | IP: ${ip} | USER: ${data.email}`);
+    console.log(`Пользователь: ${data.email} | IP: ${ip} | Подключено IP: ${data.ips.length} | Максимум IP: ${maxAllowConnection} `);
 
     if (data.ips.length >= maxAllowConnection && indexOfIp === -1) {
       if (process.env?.TARGET === "PROXY") {
