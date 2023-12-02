@@ -77,7 +77,10 @@ class User {
 
       console.log(`Line: ${item}`)
 
-      const email = item.split(" ").slice(-1)[0].replace(/\d\./g, "").substring(item.indexOf('.') + 1);
+      //const email = item.split(" ").slice(-1)[0].replace(/\d\./g, "").substring(item.indexOf('.') + 1);
+      //const email = item.split(" ").slice(-1)[0].replace(/\d\./g, "").substring(item.indexOf('.') + 2);
+      const emailMatch = line.match(/\S+\.([^.]+)/);
+      const email = emailMatch ? emailMatch[1] : "";
 
       console.log(`Email: ${email}`)
 
