@@ -75,6 +75,8 @@ class User {
 
       if (Object.keys(res).length === 0) continue;
 
+      console.log(`Line: ${item}`)
+
       newLines.push({
         ...res,
         email: item.split(" ").slice(-1)[0].replace(/\d\./g, ""),
