@@ -410,30 +410,18 @@ class IPGuard {
 
     const users = new File().GetJsonFile(
       join(__dirname, "users.json"),
-      JSON.stringify([]),
+      JSON.stringify([])
     );
-    let usersCsv = new File()
-      .GetCsvFile(join(__dirname, "users.csv"))
-      .toString();
-
-    if (usersCsv.trim()) {
-      usersCsv = usersCsv.split("\r\n").map((item) => item.split(","));
+    
+    let user = null;
+    
+    const userIndex = users.findIndex((item) => item[0] === data.email);
+    
+    if (userIndex !== -1) {
+      user = users[userIndex];
     }
-
-    if (usersCsv && usersCsv.some((item) => item[0] === data.email) === false)
-      usersCsv = null;
-
-    let userCsv = null;
-    if (usersCsv.trim())
-      userCsv = usersCsv.filter((item) => item[0] === data.email)[0] || null;
-
-    const user = users.filter((item) => item[0] === data.email)[0] || null;
-
-    const maxAllowConnection = userCsv
-      ? +userCsv[1]
-      : user
-      ? +user[1]
-      : +process.env.MAX_ALLOW_USERS;
+    
+    const maxAllowConnection = user ? +user[1] : +process.env.MAX_ALLOW_USERS;
 
     const limited = data.ips.length > maxAllowConnection;
     
