@@ -81,7 +81,7 @@ class User {
       //const email = item.split(" ").slice(-1)[0].replace(/\d\./g, "").substring(item.indexOf('.') + 2);
       //const emailMatch = item.match(/\S+\.([^.]+)/);
       //const email = emailMatch ? emailMatch[1] : "";
-      const emailMatch = line.match(/email: (\S+)/);
+      const emailMatch = item.match(/email: (\S+)/);
       const email = emailMatch ? emailMatch[1] : "";
       const cleanedEmail = email.replace(/^\d+\./, "");
 
