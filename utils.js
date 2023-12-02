@@ -77,9 +77,13 @@ class User {
 
       console.log(`Line: ${item}`)
 
+      const email = line.split(" ").slice(-1)[0].replace(/\d\./g, "").substring(line.indexOf('.') + 1);
+
+      console.log(`Email: ${email}`)
+
       newLines.push({
         ...res,
-        email: item.split(" ").slice(-1)[0].replace(/\d\./g, ""),
+        email: email,
       });
     }
 
