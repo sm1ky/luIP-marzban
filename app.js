@@ -83,7 +83,7 @@ const socket = new Socket({
   });
 })();
 
-if (process.env.NODE_ENV.includes("production")) {
+
   nodeCron.schedule(
     `*/${process.env.CHECK_INACTIVE_USERS_DURATION} * * * *`,
     () => {
@@ -92,41 +92,41 @@ if (process.env.NODE_ENV.includes("production")) {
     },
   );
   
-  if (process.env?.TARGET === "IP") {
-    nodeCron.schedule(
-      `*/${process.env.CHECK_IPS_FOR_UNBAN_USERS} * * * *`,
-      () => {
+if (process.env?.TARGET === "IP") {
+  nodeCron.schedule(
+    `*/${process.env.CHECK_IPS_FOR_UNBAN_USERS} * * * *`,
+    () => {
 
-        socket.UnbanIP();
+      socket.UnbanIP();
 
-        exec("bash ./ipunban.sh", (error, stdout, stderr) => {
-          if (error) {
-            console.error(`Error executing ipunban.sh: ${error.message}`);
-            return;
-          }
-          if (stderr) {
-            console.error(`ipunban.sh stderr: ${stderr}`);
-            return;
-          }
-          // console.log(`ipunban.sh stdout: ${stdout}`);
-        });
-      },
-    );
-  }
-
-  if (process.env?.TARGET === "PROXY") {
-    nodeCron.schedule(
-      `*/${process.env.CHECK_IPS_FOR_UNBAN_USERS} * * * *`,
-      () => {
-        // console.log("Check for unban users");
-        new IPGuard({
-          api,
-          db: DBType,
-        }).activeUsersProxy();
-      },
-    );
-  }
+      exec("bash ./ipunban.sh", (error, stdout, stderr) => {
+        if (error) {
+          console.error(`Error executing ipunban.sh: ${error.message}`);
+          return;
+        }
+        if (stderr) {
+          console.error(`ipunban.sh stderr: ${stderr}`);
+          return;
+        }
+        // console.log(`ipunban.sh stdout: ${stdout}`);
+      });
+    },
+  );
 }
+
+if (process.env?.TARGET === "PROXY") {
+  nodeCron.schedule(
+    `*/${process.env.CHECK_IPS_FOR_UNBAN_USERS} * * * *`,
+    () => {
+      // console.log("Check for unban users");
+      new IPGuard({
+        api,
+        db: DBType,
+      }).activeUsersProxy();
+    },
+  );
+}
+
 
 // Api server
 if (process.env?.API_ENABLE === "true") {
