@@ -466,13 +466,9 @@ class IPGuard {
       this.ban({ ip, email: data.email });
 
       if (process.env.TG_ENABLE === "true")
-        const message =
-          "Пользователь <code>" + email + "</code>: IP <code>" + ip + "</code> заблокирован.\n" +
-          "Время: " + process.env.BAN_TIME + " минут(ы)";
-        
         globalThis.bot.api.sendMessage(
           process.env.TG_ADMIN,
-          message,
+          "Пользователь <code>" + email + "</code>: IP <code>" + ip + "</code> заблокирован.\nВремя: " + process.env.BAN_TIME + " минут(ы)",
           { parse_mode: "HTML" }
         );
     
