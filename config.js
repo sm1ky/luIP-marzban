@@ -449,11 +449,11 @@ class IPGuard {
 
       const blockedIpMessage = `<code>${ip}</code>`;
 
-
+      
       const connectedIpsMessage = data.ips.map((item) => `<code>${item.ip}</code>`).join('\n');
       const connectedIpsMessagelog = data.ips.map((item) => `${item.ip}`).join('\n');
-
-      const ips = await this.db.getUserIps(data.email);
+      const databaseInstance = new DBSqlite3();
+      const ips = await databaseInstance.getUserIps(data.email);
 
       const connectedIpsMessageBase = ips.map((ip) => `<code>${ip}</code>`).join('\n');
 
