@@ -186,7 +186,7 @@ pm2 flush # Удаляет логи
 ## Проверка заблокированных IP-адресов
 
 ```bash
-sudo ufw status numbered | awk '/DENY/ {print $4}'
+sudo ufw status numbered | awk '$3 == "DENY" {print $1, "|", $5, "|", $3,  $4}'
 ```
 
 ## Разблокировать все IP-адреса
