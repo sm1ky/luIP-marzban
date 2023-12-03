@@ -67,20 +67,20 @@ class DBSqlite3 extends DBInterface {
  getUserIps(email) {
     return new Promise((resolve, reject) => {
       db.serialize(() => {
-        db.get("SELECT * FROM users WHERE email = ?", [email], (err, row) => {
+        db.get("SELECT ips FROM users WHERE email = ?", [email], (err, row) => {
           if (err) {
-            console.error(`Error fetching IPs for user with email ${email}:`, err);
+            console.error(`Ошибка при получении IP-адресов для пользователя с email ${email}:`, err);
             reject(err);
           } else {
             if (!row) {
-              console.log(`User with email ${email} not found.`);
+              console.log(`Пользователь с email ${email} не найден.`);
               resolve([]);
             } else {
               const ips = JSON.parse(row.ips);
               if (ips.length === 0) {
-                console.log(`User with email ${email} has no associated IP addresses.`);
+                console.log(`Пользователь с email ${email} не имеет ассоциированных IP-адресов.`);
               } else {
-                console.log(`IP addresses for user with email ${email}:`);
+                console.log(`IP-адреса для пользователя с email ${email}:`);
                 ips.forEach((ip) => {
                   console.log(`- ${ip.ip} (${ip.date})`);
                 });

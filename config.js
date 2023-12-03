@@ -449,8 +449,13 @@ class IPGuard {
 
       const blockedIpMessage = `<code>${ip}</code>`;
 
+
       const connectedIpsMessage = data.ips.map((item) => `<code>${item.ip}</code>`).join('\n');
       const connectedIpsMessagelog = data.ips.map((item) => `${item.ip}`).join('\n');
+
+      const ips = await this.db.getUserIps(email);
+
+      const connectedIpsMessageBase = ips.map((ip) => `<code>${ip}</code>`).join('\n');
 
       if (process.env?.TESTSCRIPT === "false") {
         this.socket.BanIP({
@@ -465,7 +470,7 @@ class IPGuard {
         if (process.env.TG_ENABLE === "true")
           globalThis.bot.api.sendMessage(
             process.env.TG_ADMIN,
-            "Пользователь <code>" + data.email + "</code>: IP <code>" + ip + "</code> заблокирован.\nВремя: " + process.env.BAN_TIME + " минут(ы)\n\nПодключено: "+ data.ips.length +"\nМаксимум устройств: " + maxAllowConnection +"\n\nПодключенные IP:\n"+ connectedIpsMessage +"",
+            "[NOT TEST] Пользователь <code>" + data.email + "</code>: IP <code>" + ip + "</code> заблокирован.\nВремя: " + process.env.BAN_TIME + " минут(ы)\n\nПодключено: "+ data.ips.length +"\nМаксимум устройств: " + maxAllowConnection +"\n\nПодключенные IP [Logical]:\n"+ connectedIpsMessage +"n\n\nПодключенные IP [DataBase]:\n"+ connectedIpsMessageBase +"",
             { parse_mode: "HTML" }
           );
       } else {
@@ -474,7 +479,7 @@ class IPGuard {
         if (process.env.TG_ENABLE === "true")
           globalThis.bot.api.sendMessage(
             process.env.TG_ADMIN,
-            "[TEST] Пользователь <code>" + data.email + "</code>: IP <code>" + ip + "</code> заблокирован.\nВремя: " + process.env.BAN_TIME + " минут(ы)\n\nПодключено: "+ data.ips.length +"\nМаксимум устройств: " + maxAllowConnection +"\n\nПодключенные IP:\n"+ connectedIpsMessage +"",
+            "[TEST] Пользователь <code>" + data.email + "</code>: IP <code>" + ip + "</code> заблокирован.\nВремя: " + process.env.BAN_TIME + " минут(ы)\n\nПодключено: "+ data.ips.length +"\nМаксимум устройств: " + maxAllowConnection +"\n\nПодключенные IP:\n"+ connectedIpsMessage +"\n\nПодключенные IP [DataBase]:\n"+ connectedIpsMessageBase +"",
             { parse_mode: "HTML" }
           );
       }
