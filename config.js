@@ -467,7 +467,7 @@ class IPGuard {
 
         this.ban({ ip, email: data.email });
 
-        console.log(`[NOT TEST] ${new Date().toLocaleString('ru-RU')}: Заблокирован IP: ${ip} у пользователя ${data.email}\n\nПодключенные IP:\n${connectedIpsMessagelog}`);
+        console.log(`[NOT TEST] ${new Date().toLocaleString('ru-RU')}: Заблокирован IP: ${ip} у пользователя ${data.email}\n\nПодключенные IP [Logical]:\n${connectedIpsMessagelog}\n\nПодключенные IP [DataBase]:\n${connectedIpsMessageBase}`);
 
         if (process.env.TG_ENABLE === "true")
           globalThis.bot.api.sendMessage(
@@ -481,7 +481,7 @@ class IPGuard {
         if (process.env.TG_ENABLE === "true")
           globalThis.bot.api.sendMessage(
             process.env.TG_ADMIN,
-            "[TEST] Пользователь <code>" + data.email + "</code>: IP <code>" + ip + "</code> заблокирован.\nВремя: " + process.env.BAN_TIME + " минут(ы)\n\nПодключено: "+ (data.ips.length) +"\nМаксимум устройств: " + maxAllowConnection +"\n\nПодключенные IP:\n"+ connectedIpsMessage +"\n\nПодключенные IP [DataBase]:\n"+ connectedIpsMessageBase +"",
+            "[TEST] Пользователь <code>" + data.email + "</code>: IP <code>" + ip + "</code> заблокирован.\nВремя: " + process.env.BAN_TIME + " минут(ы)\n\nПодключено: "+ (data.ips.length) +"\nМаксимум устройств: " + maxAllowConnection +"\n\nПодключенные IP [Logical]:\n"+ connectedIpsMessage +"\n\nПодключенные IP [DataBase]:\n"+ connectedIpsMessageBase +"",
             { parse_mode: "HTML" }
           );
       }
