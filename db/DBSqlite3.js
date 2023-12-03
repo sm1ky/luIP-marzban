@@ -64,6 +64,28 @@ class DBSqlite3 extends DBInterface {
     });
   }
 
+  getUserIps(email) {
+    db.get("SELECT * FROM users WHERE email = ?", [email], (err, row) => {
+      if (err) {
+        throw new Error(err);
+      } else {
+        if (!row) {
+          console.log(`User with email ${email} not found.`);
+        } else {
+          const ips = JSON.parse(row.ips);
+          if (ips.length === 0) {
+            console.log(`User with email ${email} has no associated IP addresses.`);
+          } else {
+            console.log(`IP addresses for user with email ${email}:`);
+            ips.forEach((ip) => {
+              console.log(`- ${ip.ip} (${ip.date})`);
+            });
+          }
+        }
+      }
+    });
+  };
+
   addIp(email, ipData) {
     // Do not continue if the email is empty
     if (!email?.trim()) return;
@@ -109,7 +131,8 @@ class DBSqlite3 extends DBInterface {
                 if (updateErr) {
                   throw new Error(updateErr);
                 } else {
-                  console.log(" "+ email +" | Ip | "+ ipData +" | Successfully Added");
+                  console.log(" "+ email +" | Ip | "+ ipData.ip +" | Successfully Added");
+                  getUserIps(email)
                 }
               },
             );
@@ -125,7 +148,8 @@ class DBSqlite3 extends DBInterface {
                 if (updateErr) {
                   throw new Error(updateErr);
                 } else {
-                  console.log(" "+ email +" | Ip | "+ ipData +" | Successfully Added");
+                  console.log(" "+ email +" | Ip | "+ ipData.ip +" | Successfully Added");
+                  getUserIps(email)
                 }
               },
             );
