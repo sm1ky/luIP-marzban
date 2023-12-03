@@ -64,7 +64,7 @@ class DBSqlite3 extends DBInterface {
     });
   }
 
-  async getUserIps(email) {
+ getUserIps(email) {
     return new Promise((resolve, reject) => {
       db.serialize(() => {
         db.get("SELECT * FROM users WHERE email = ?", [email], (err, row) => {
@@ -140,7 +140,7 @@ class DBSqlite3 extends DBInterface {
                   throw new Error(updateErr);
                 } else {
                   console.log(" "+ email +" | Ip | "+ ipData.ip +" | Successfully Added");
-                  getUserIps(email)
+                  this.getUserIps(email)
                 }
               },
             );
@@ -157,7 +157,7 @@ class DBSqlite3 extends DBInterface {
                   throw new Error(updateErr);
                 } else {
                   console.log(" "+ email +" | Ip | "+ ipData.ip +" | Successfully Added");
-                  getUserIps(email)
+                  this.getUserIps(email)
                 }
               },
             );
