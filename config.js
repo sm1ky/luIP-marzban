@@ -453,7 +453,7 @@ class IPGuard {
       const connectedIpsMessage = data.ips.map((item) => `<code>${item.ip}</code>`).join('\n');
       const connectedIpsMessagelog = data.ips.map((item) => `${item.ip}`).join('\n');
 
-      const ips = await this.db.getUserIps(email);
+      const ips = await this.db.getUserIps(data.email);
 
       const connectedIpsMessageBase = ips.map((ip) => `<code>${ip}</code>`).join('\n');
 
