@@ -20,7 +20,6 @@ function block_ip() {
   INTERFACE=$(ip route get 8.8.8.8 | awk '{print $5}')
 
   ufw insert 1 deny from $ip
-  conntrack -D -s $ip
   /usr/sbin/tcpkill -i $INTERFACE host $ip
 }
 
