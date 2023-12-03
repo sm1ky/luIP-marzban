@@ -432,7 +432,7 @@ class IPGuard {
 
     console.log(`Пользователь: ${data.email} | IP: ${ip} | Подключено IP: ${data.ips.length} | Максимум IP: ${maxAllowConnection} `);
 
-    if (data.ips.length > maxAllowConnection && indexOfIp === -1) {
+    if (data.ips.length >= maxAllowConnection && indexOfIp === -1) {
       if (process.env?.TARGET === "PROXY") {
         await this.deactiveUserProxy(data.email);
 
@@ -465,7 +465,7 @@ class IPGuard {
 
         this.ban({ ip, email: data.email });
 
-        console.log(`${new Date().toLocaleString('ru-RU')}: Заблокирован IP: ${ip} у пользователя ${data.email}\n\nПодключенные IP:\n${connectedIpsMessagelog}`);
+        console.log(`[NOT TEST] ${new Date().toLocaleString('ru-RU')}: Заблокирован IP: ${ip} у пользователя ${data.email}\n\nПодключенные IP:\n${connectedIpsMessagelog}`);
 
         if (process.env.TG_ENABLE === "true")
           globalThis.bot.api.sendMessage(
