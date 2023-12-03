@@ -82,7 +82,7 @@ class Ws {
 
       if (data.length === 0) return;
 
-      console.log(`Update ${new Date(toLocaleString('ru-RU'))}: `, data);
+      console.log(`Обновление ${new Date().toLocaleString('ru-RU')}: `, data);
 
       let num = data.length;
       while (num--) {
