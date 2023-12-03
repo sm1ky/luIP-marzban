@@ -430,7 +430,7 @@ class IPGuard {
       return callback[2]();
     }
 
-    console.log(`Пользователь: ${data.email} | IP: ${ip} | Подключено IP: ${(data.ips.length + 1)} | Максимум IP: ${maxAllowConnection} `);
+    console.log(`Пользователь: ${data.email} | IP: ${ip} | Подключено IP: ${(data.ips.length)} | Максимум IP: ${maxAllowConnection} `);
 
     if (data.ips.length >= maxAllowConnection && indexOfIp === -1) {
       if (process.env?.TARGET === "PROXY") {
