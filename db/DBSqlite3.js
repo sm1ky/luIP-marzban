@@ -213,7 +213,7 @@ class DBSqlite3 extends DBInterface {
     const currentTime = Date.now(); // текущее время в миллисекундах с 1 января 1970 года (Unix time)
     const durationInMinutes = +process.env.CHECK_INACTIVE_USERS_DURATION;
     const fewMinutesLater = currentTime - durationInMinutes * 60 * 1000;
-    console.log(`NOW: ${currentTime} | CHECK: ${fewMinutesLater.toISOString()}`);
+    console.log(`NOW: ${currentTime} | CHECK: ${fewMinutesLater}`);
 
     db.serialize(function () {
       db.all(
