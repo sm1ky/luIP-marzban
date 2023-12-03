@@ -189,6 +189,12 @@ pm2 flush # Удаляет логи
 sudo ufw status numbered | awk '$3 == "DENY" {print $1, "|", $5, "|", $3,  $4}'
 ```
 
+## Удалить заблокированный IP-адрес
+NUM - полученный из команды выше, содержится в []
+```bash
+sudo ufw delete NUM 
+```
+
 ## Разблокировать все IP-адреса
 ```bash
 bash ./unbanall.sh
