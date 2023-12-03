@@ -472,7 +472,7 @@ class IPGuard {
         if (process.env.TG_ENABLE === "true")
           globalThis.bot.api.sendMessage(
             process.env.TG_ADMIN,
-            "[NOT TEST] Пользователь <code>" + data.email + "</code>: IP <code>" + ip + "</code> заблокирован.\nВремя: " + process.env.BAN_TIME + " минут(ы)\n\nПодключено: "+ (data.ips.length) +"\nМаксимум устройств: " + maxAllowConnection +"\n\nПодключенные IP [Logical]:\n"+ connectedIpsMessage +"n\n\nПодключенные IP [DataBase]:\n"+ connectedIpsMessageBase +"",
+            "[NOT TEST] Пользователь <code>" + data.email + "</code>: IP <code>" + ip + "</code> заблокирован.\nВремя: " + process.env.BAN_TIME + " минут(ы)\n\nПодключено: "+ (data.ips.length) +"\nМаксимум устройств: " + maxAllowConnection +"\n\nПодключенные IP [Logical]:\n"+ connectedIpsMessage +"\n\nПодключенные IP [DataBase]:\n"+ connectedIpsMessageBase +"",
             { parse_mode: "HTML" }
           );
       } else {
