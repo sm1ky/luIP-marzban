@@ -109,7 +109,7 @@ class DBSqlite3 extends DBInterface {
                 if (updateErr) {
                   throw new Error(updateErr);
                 } else {
-                  // console.log("Ip Successfully Updated");
+                  console.log(" "+ email +" | Ip | "+ ipData +" | Successfully Added");
                 }
               },
             );
@@ -125,7 +125,7 @@ class DBSqlite3 extends DBInterface {
                 if (updateErr) {
                   throw new Error(updateErr);
                 } else {
-                  // console.log("Ip Successfully Added");
+                  console.log(" "+ email +" | Ip | "+ ipData +" | Successfully Added");
                 }
               },
             );
@@ -186,7 +186,7 @@ class DBSqlite3 extends DBInterface {
               if (updateErr) {
                 throw new Error(updateErr);
               } else {
-                // console.log("Ip Successfully Added");
+                console.log("Ip Successfully Remove [last]");
               }
             },
           );
@@ -206,11 +206,14 @@ class DBSqlite3 extends DBInterface {
   }
 
   deleteInactiveUsers() {
-    const currentTime = new Date().getTime();
-    const fewMinutesLater = new Date(
-      currentTime - +process.env.CHECK_INACTIVE_USERS_DURATION * 60 * 1000,
-    );
-    // console.log(fewMinutesLater.toISOString());
+    // const currentTime = new Date().getTime();
+    // const fewMinutesLater = new Date(
+    //   currentTime - +process.env.CHECK_INACTIVE_USERS_DURATION * 60 * 1000,
+    // );
+    const currentTime = Date.now(); // текущее время в миллисекундах с 1 января 1970 года (Unix time)
+    const durationInMinutes = +process.env.CHECK_INACTIVE_USERS_DURATION;
+    const fewMinutesLater = currentTime - durationInMinutes * 60 * 1000;
+    console.log(`NOW: ${currentTime} | CHECK: ${fewMinutesLater.toISOString()}`);
 
     db.serialize(function () {
       db.all(
@@ -231,7 +234,7 @@ class DBSqlite3 extends DBInterface {
               return idDate > fewMinutesLater;
             });
 
-            // console.log("updateIds", updatedIds);
+            console.log(" "+email+" | updateIds", updatedIds);
 
             db.run(
               `UPDATE users SET ips = ? WHERE email = ?`,
@@ -242,7 +245,7 @@ class DBSqlite3 extends DBInterface {
                   console.error(err);
                   return;
                 }
-                // console.log(`Record with email ${email} updated.`);
+                console.log(`Record with email ${email} updated.`);
               },
             );
           });
