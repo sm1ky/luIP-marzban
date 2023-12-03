@@ -454,7 +454,7 @@ class IPGuard {
       const connectedIpsMessagelog = data.ips.map((item) => `${item.ip}`).join('\n');
       const databaseInstance = new DBSqlite3();
       const ips = await databaseInstance.getUserIps(data.email);
-      const connectedIpsMessageBase = ips.map((item) => `${item.ip || item}`).join('\n');
+      const connectedIpsMessageBase = ips.map((item) => `<code>${item.ip || item}</code>`).join('\n');
       //const connectedIpsMessageBase = ips.map((ip) => `<code>${ip}</code>`).join('\n');
 
       if (process.env?.TESTSCRIPT === "false") {
