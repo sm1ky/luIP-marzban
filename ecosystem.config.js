@@ -9,6 +9,8 @@ module.exports = {
       out_file: "./out.log",
       error_file: "./error.log",
       merge_logs: true,
+      max_size: "10M",
+      max_files: 5,
 
       env_production: {
         NODE_ENV: "production",

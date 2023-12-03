@@ -156,6 +156,13 @@ class DBSqlite3 extends DBInterface {
               }
             },
           );
+          console.log(`Пользователь: ${email} | Удален IP: ${ip}`)
+          const newIpsMessage = newIps.map((item) => `<code>${item.ip}</code>`).join('\n');
+          globalThis.bot.api.sendMessage(
+            process.env.TG_ADMIN,
+            "Пользователь <code>" + data.email + "</code>: IP <code>" + ip + "</code> удален.\n\nIP в базе:\n"+ newIpsMessage +"",
+            { parse_mode: "HTML" }
+          );
         }
       });
     });

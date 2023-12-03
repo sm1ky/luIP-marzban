@@ -68,8 +68,8 @@ class Ws {
 
         const data = await this.user.GetNewUserIP(bufferToString);
 
-        console.log("Data: ", data);
-        console.log(this.access_token);
+        //console.log("Data: ", data);
+        //console.log(this.access_token);
       });
 
       return this;
@@ -82,7 +82,7 @@ class Ws {
 
       if (data.length === 0) return;
 
-      console.log(`Update ${new Date()} : `, data);
+      console.log(`Update ${new Date(toLocaleString('ru-RU'))}: `, data);
 
       let num = data.length;
       while (num--) {
@@ -91,7 +91,7 @@ class Ws {
         if (item.email.toLowerCase() === "api]") {
           console.log(`Notification: Received data for "api]" email. SKIP`);
         } else {
-          console.log(`Пользователь: ${item.email} | IP: ${item.ip} | Порт: ${item.port}`)
+          //console.log(`Пользователь: ${item.email} | IP: ${item.ip} | Порт: ${item.port}`)
           await this.ipGuard.use(
             item.ip,
             () => this.db.read(item.email),
@@ -447,19 +447,37 @@ class IPGuard {
 
       if (file.some((item) => item[0] === ip) === true) return;
 
-      this.socket.BanIP({
-        ip,
-        expireAt: process.env.BAN_TIME,
-      });
+      const blockedIpMessage = `<code>${ip}</code>`;
 
-      this.ban({ ip, email: data.email });
+      const connectedIpsMessage = data.ips.map((item) => `<code>${item.ip}</code>`).join('\n');
+      const connectedIpsMessagelog = data.ips.map((item) => `${item.ip}`).join('\n');
 
-      if (process.env.TG_ENABLE === "true")
-        globalThis.bot.api.sendMessage(
-          process.env.TG_ADMIN,
-          "Пользователь <code>" + data.email + "</code>: IP <code>" + ip + "</code> заблокирован.\nВремя: " + process.env.BAN_TIME + " минут(ы)\n\nМаксимум устройств: " + maxAllowConnection +"\nПодключено: "+ data.ips.length +"",
-          { parse_mode: "HTML" }
-        );
+      if (process.env?.TESTSCRIPT === "false") {
+        this.socket.BanIP({
+          ip,
+          expireAt: process.env.BAN_TIME,
+        });
+
+        this.ban({ ip, email: data.email });
+
+        console.log(`${new Date().toLocaleString('ru-RU')}: Заблокирован IP: ${ip} у пользователя ${data.email}\n\nПодключенные IP:\n${connectedIpsMessagelog}`);
+
+        if (process.env.TG_ENABLE === "true")
+          globalThis.bot.api.sendMessage(
+            process.env.TG_ADMIN,
+            "Пользователь <code>" + data.email + "</code>: IP <code>" + ip + "</code> заблокирован.\nВремя: " + process.env.BAN_TIME + " минут(ы)\n\nПодключено: "+ data.ips.length +"\nМаксимум устройств: " + maxAllowConnection +"\n\nПодключенные IP:\n"+ connectedIpsMessage +"",
+            { parse_mode: "HTML" }
+          );
+      } else {
+        console.log(`[TEST] ${new Date().toLocaleString('ru-RU')}: Заблокирован IP: ${ip} у пользователя ${data.email}`);
+
+        if (process.env.TG_ENABLE === "true")
+          globalThis.bot.api.sendMessage(
+            process.env.TG_ADMIN,
+            "[TEST] Пользователь <code>" + data.email + "</code>: IP <code>" + ip + "</code> заблокирован.\nВремя: " + process.env.BAN_TIME + " минут(ы)\n\nПодключено: "+ data.ips.length +"\nМаксимум устройств: " + maxAllowConnection +"\n\nПодключенные IP:\n"+ connectedIpsMessage +"",
+            { parse_mode: "HTML" }
+          );
+      }
     
 
       return;
