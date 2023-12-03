@@ -430,7 +430,7 @@ class IPGuard {
       return callback[2]();
     }
 
-    console.log(`Пользователь: ${data.email} | IP: ${ip} | Подключено IP: ${data.ips.length} | Максимум IP: ${maxAllowConnection} `);
+    console.log(`Пользователь: ${data.email} | IP: ${ip} | Подключено IP: ${(data.ips.length + 1)} | Максимум IP: ${maxAllowConnection} `);
 
     if (data.ips.length >= maxAllowConnection && indexOfIp === -1) {
       if (process.env?.TARGET === "PROXY") {
@@ -449,7 +449,9 @@ class IPGuard {
 
       const blockedIpMessage = `<code>${ip}</code>`;
 
-      
+      data.ips.push({ ip: ip, date: new Date().toISOString() });
+
+
       const connectedIpsMessage = data.ips.map((item) => `<code>${item.ip}</code>`).join('\n');
       const connectedIpsMessagelog = data.ips.map((item) => `${item.ip}`).join('\n');
       const databaseInstance = new DBSqlite3();
@@ -470,7 +472,7 @@ class IPGuard {
         if (process.env.TG_ENABLE === "true")
           globalThis.bot.api.sendMessage(
             process.env.TG_ADMIN,
-            "[NOT TEST] Пользователь <code>" + data.email + "</code>: IP <code>" + ip + "</code> заблокирован.\nВремя: " + process.env.BAN_TIME + " минут(ы)\n\nПодключено: "+ data.ips.length +"\nМаксимум устройств: " + maxAllowConnection +"\n\nПодключенные IP [Logical]:\n"+ connectedIpsMessage +"n\n\nПодключенные IP [DataBase]:\n"+ connectedIpsMessageBase +"",
+            "[NOT TEST] Пользователь <code>" + data.email + "</code>: IP <code>" + ip + "</code> заблокирован.\nВремя: " + process.env.BAN_TIME + " минут(ы)\n\nПодключено: "+ (data.ips.length + 1) +"\nМаксимум устройств: " + maxAllowConnection +"\n\nПодключенные IP [Logical]:\n"+ connectedIpsMessage +"n\n\nПодключенные IP [DataBase]:\n"+ connectedIpsMessageBase +"",
             { parse_mode: "HTML" }
           );
       } else {
@@ -479,7 +481,7 @@ class IPGuard {
         if (process.env.TG_ENABLE === "true")
           globalThis.bot.api.sendMessage(
             process.env.TG_ADMIN,
-            "[TEST] Пользователь <code>" + data.email + "</code>: IP <code>" + ip + "</code> заблокирован.\nВремя: " + process.env.BAN_TIME + " минут(ы)\n\nПодключено: "+ data.ips.length +"\nМаксимум устройств: " + maxAllowConnection +"\n\nПодключенные IP:\n"+ connectedIpsMessage +"\n\nПодключенные IP [DataBase]:\n"+ connectedIpsMessageBase +"",
+            "[TEST] Пользователь <code>" + data.email + "</code>: IP <code>" + ip + "</code> заблокирован.\nВремя: " + process.env.BAN_TIME + " минут(ы)\n\nПодключено: "+ (data.ips.length + 1) +"\nМаксимум устройств: " + maxAllowConnection +"\n\nПодключенные IP:\n"+ connectedIpsMessage +"\n\nПодключенные IP [DataBase]:\n"+ connectedIpsMessageBase +"",
             { parse_mode: "HTML" }
           );
       }
