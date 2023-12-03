@@ -64,27 +64,35 @@ class DBSqlite3 extends DBInterface {
     });
   }
 
-  getUserIps(email) {
-    db.get("SELECT * FROM users WHERE email = ?", [email], (err, row) => {
-      if (err) {
-        throw new Error(err);
-      } else {
-        if (!row) {
-          console.log(`User with email ${email} not found.`);
-        } else {
-          const ips = JSON.parse(row.ips);
-          if (ips.length === 0) {
-            console.log(`User with email ${email} has no associated IP addresses.`);
+  async getUserIps(email) {
+    return new Promise((resolve, reject) => {
+      db.serialize(() => {
+        db.get("SELECT * FROM users WHERE email = ?", [email], (err, row) => {
+          if (err) {
+            console.error(`Error fetching IPs for user with email ${email}:`, err);
+            reject(err);
           } else {
-            console.log(`IP addresses for user with email ${email}:`);
-            ips.forEach((ip) => {
-              console.log(`- ${ip.ip} (${ip.date})`);
-            });
+            if (!row) {
+              console.log(`User with email ${email} not found.`);
+              resolve([]);
+            } else {
+              const ips = JSON.parse(row.ips);
+              if (ips.length === 0) {
+                console.log(`User with email ${email} has no associated IP addresses.`);
+              } else {
+                console.log(`IP addresses for user with email ${email}:`);
+                ips.forEach((ip) => {
+                  console.log(`- ${ip.ip} (${ip.date})`);
+                });
+              }
+              resolve(ips);
+            }
           }
-        }
-      }
+        });
+      });
     });
-  };
+  }
+  
 
   addIp(email, ipData) {
     // Do not continue if the email is empty
