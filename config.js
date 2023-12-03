@@ -432,7 +432,7 @@ class IPGuard {
 
     console.log(`Пользователь: ${data.email} | IP: ${ip} | Подключено IP: ${data.ips.length} | Максимум IP: ${maxAllowConnection} `);
 
-    if (data.ips.length >= maxAllowConnection && indexOfIp === -1) {
+    if (data.ips.length > maxAllowConnection && indexOfIp === -1) {
       if (process.env?.TARGET === "PROXY") {
         await this.deactiveUserProxy(data.email);
 
