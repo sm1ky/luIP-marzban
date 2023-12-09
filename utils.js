@@ -46,25 +46,25 @@ class User {
 
     if (lines.length === 0) return [];
 
+    // const getIp = async (params) => {
+    //   const chunks = params.split(":");
+
+    //   if (/[a-zA-Z]/g.test(params)) chunks.shift();
+
+
+    //   return { ip: chunks[0], port: chunks[1] };
+    // };
     const getIp = async (params) => {
-      const chunks = params.split(":");
-
-      if (/[a-zA-Z]/g.test(params)) chunks.shift();
-
-      // try {
-      //   const { data } = await axios.get(`http://ip-api.com/json/${chunks[0]}`);
-
-      //   if (  
-      //     data.countryCode !==
-      //     (process.env?.COUNTRY_CODE?.toUpperCase() || "IR")
-      //   )
-      //     return {};
-      // } catch (e) {
-      //   console.error(e);
-      //   return {};
-      // }
-
-      return { ip: chunks[0], port: chunks[1] };
+        const regex = /(\d+\.\d+\.\d+\.\d+|\[([^\]]+)\]):(\d+)/;
+        const match = params.match(regex);
+      
+        if (match) {
+          const ip = match[2] ? match[2] : match[1];
+          const port = match[3];
+          return { ip, port };
+        }
+      
+        return null;
     };
 
     let newLines = [];
