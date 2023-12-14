@@ -303,6 +303,7 @@ npm start
 
 1. Tron: `TSrhAJEYqYHzuGYjsUqC46mmCx7Jp27dvX`
 2. Тинькофф: `2200700951484392`
+3. Напишите мне в [Telegram](https://t.me/sm1ky) и я дам вам нужные реквизиты
 
 ## Автор оригинального скрипта и его репозиторий
 Автор: [mmdzdov](https://github.com/mmdzov)
