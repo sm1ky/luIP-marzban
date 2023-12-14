@@ -35,8 +35,8 @@ Node: [UFW Node](https://docs.marzban.ru/advanced/ufw_node/)
 - [Unblock all IPs](https://github.com/sm1ky/luIP-marzban/blob/main/README-EN.md#unblock-all-ips)
 - [Uninstall project](https://github.com/sm1ky/luIP-marzban/blob/main/README-EN.md#uninstall)
 - [API Reference](https://github.com/sm1ky/luIP-marzban/blob/main/README-EN.md#api-reference)
-- [FAQ](https://github.com/sm1ky/luIP-marzban/tree/main#faq)
-- [Donate](https://github.com/sm1ky/luIP-marzban/tree/main#donate)
+- [FAQ](https://github.com/sm1ky/luIP-marzban/blob/main/README-EN.md#faq)
+- [Donate](https://github.com/sm1ky/luIP-marzban/blob/main/README-EN.md#donate)
 
 ## Mechanism
 
