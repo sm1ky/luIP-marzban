@@ -18,19 +18,23 @@ Node: https://docs.marzban.ru/advanced/ufw_node/
 
 ## Инструкции
 
-- [Механизм](https://github.com/sm1ky/luIP-marzban/tree/main#mechanism)
-- [Функции](https://github.com/sm1ky/luIP-marzban/tree/main#features)
-- [Требования](https://github.com/sm1ky/luIP-marzban/tree/main#installation)
-  - [Установка node.js](https://github.com/sm1ky/luIP-marzban/tree/main#install-nodejs)
-  - [Установка ufw / dsniff / gawk / csvtool](https://github.com/sm1ky/luIP-marzban/tree/main#install-other-requirements)
-- [Установка luIP-marzban](https://github.com/sm1ky/luIP-marzban/tree/main#install-luip-marzban)
-- [Окружение](https://github.com/sm1ky/luIP-marzban/tree/main#luip-marzbanenv-file)
+- [Механизм](https://github.com/sm1ky/luIP-marzban/tree/main#Механизм)
+- [Функции](https://github.com/sm1ky/luIP-marzban/tree/main#Функции)
+- [Требования](https://github.com/sm1ky/luIP-marzban/tree/main#Установка)
+  - [Установка node.js](https://github.com/sm1ky/luIP-marzban/tree/main#Установка-Node.js))
+  - [Установка ufw / dsniff / gawk / csvtool](https://github.com/sm1ky/luIP-marzban/tree/main#Установка-Node.js)
+- [Установка luIP-marzban](https://github.com/sm1ky/luIP-marzban/tree/main#Установка-Node.js)
+- [Окружение](https://github.com/sm1ky/luIP-marzban/tree/main#файл-env-для-luip-marzban)
 - [users.json](https://github.com/sm1ky/luIP-marzban/tree/main#usersjson)
-- [Разрешение](https://github.com/sm1ky/luIP-marzban/tree/main#permission-to-use-ipbansh--ipunbansh)
-- [Запуск проекта](https://github.com/sm1ky/luIP-marzban/tree/main#run-the-project)
-- [API Reference](https://github.com/sm1ky/luIP-marzban/tree/main#run-the-project)
-- [FAQ](https://github.com/sm1ky/luIP-marzban/tree/main#faq)
-- [Пожертвовать](https://github.com/sm1ky/luIP-marzban/tree/main#donate)
+- [Разрешение](https://github.com/sm1ky/luIP-marzban/tree/main#разрешение-на-использование-ipbansh--ipunbansh--restore_banned_ipssh--unbanallsh)
+- [Запуск проекта](https://github.com/sm1ky/luIP-marzban/tree/main#запуск-проекта)
+- [Остановка проекта](https://github.com/sm1ky/luIP-marzban/tree/main#остановка-luip)
+- [Проверка заблокированных IP](https://github.com/sm1ky/luIP-marzban/tree/main#проверка-заблокированных-ip-адресов)
+- [Разблокировка всех IP](https://github.com/sm1ky/luIP-marzban/tree/main#разблокировать-все-ip-адреса)
+- [Запуск проекта](https://github.com/sm1ky/luIP-marzban/tree/main#запуск-проекта)
+- [API Reference](https://github.com/sm1ky/luIP-marzban/tree/main#api-reference)
+- [FAQ](https://github.com/sm1ky/luIP-marzban/tree/main#часто-задаваемые-вопросы)
+- [Пожертвовать](https://github.com/sm1ky/luIP-marzban/tree/main#часто-задаваемые-вопросы)
 
 
 ## Механизм
