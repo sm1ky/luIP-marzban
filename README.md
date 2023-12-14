@@ -21,7 +21,7 @@ Node: https://docs.marzban.ru/advanced/ufw_node/
 - [Механизм](https://github.com/sm1ky/luIP-marzban/tree/main#Механизм)
 - [Функции](https://github.com/sm1ky/luIP-marzban/tree/main#Функции)
 - [Требования](https://github.com/sm1ky/luIP-marzban/tree/main#Установка)
-  - [Установка node.js](https://github.com/sm1ky/luIP-marzban/tree/main#Установка-Node.js))
+  - [Установка node.js](https://github.com/sm1ky/luIP-marzban/tree/main#Установка-Node.js)
   - [Установка ufw / dsniff / gawk / csvtool](https://github.com/sm1ky/luIP-marzban/tree/main#Установка-Node.js)
 - [Установка luIP-marzban](https://github.com/sm1ky/luIP-marzban/tree/main#Установка-Node.js)
 - [Окружение](https://github.com/sm1ky/luIP-marzban/tree/main#файл-env-для-luip-marzban)
