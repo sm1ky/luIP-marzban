@@ -227,7 +227,7 @@ sudo rm -rf /luIP-marzban
 | `API_EXPIRE_TOKEN_AT` | У каждого полученного access_token есть срок действия. Вы можете установить его здесь |
 | `API_PORT` | Выберите порт для вашего api-адреса. Также убедитесь, что он не занят. По умолчанию 3000 |
 
-Your default api address: https://example.com:4000/api
+Ссылка по умолчанию: https://example.com:4000/api
 
 #### Получение access_token
 
@@ -275,7 +275,7 @@ Your default api address: https://example.com:4000/api
 | :-------- | :------- | :-------------------------------- |
 | `email`      | `string` | **Обязательно**. Имя пользователя. Например: admin |
 
-#### Clear luIP database
+#### Очистить luIP базу (users.json)
 
 ```http
   GET /api/clear
