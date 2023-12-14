@@ -31,7 +31,7 @@ Node: https://docs.marzban.ru/advanced/ufw_node/
 - [Остановка проекта](https://github.com/sm1ky/luIP-marzban/tree/main#остановка-luip)
 - [Проверка заблокированных IP](https://github.com/sm1ky/luIP-marzban/tree/main#проверка-заблокированных-ip-адресов)
 - [Разблокировка всех IP](https://github.com/sm1ky/luIP-marzban/tree/main#разблокировать-все-ip-адреса)
-- [Запуск проекта](https://github.com/sm1ky/luIP-marzban/tree/main#запуск-проекта)
+- [Удаление проекта](https://github.com/sm1ky/luIP-marzban/tree/main#Удаление)
 - [API Reference](https://github.com/sm1ky/luIP-marzban/tree/main#api-reference)
 - [FAQ](https://github.com/sm1ky/luIP-marzban/tree/main#часто-задаваемые-вопросы)
 - [Пожертвовать](https://github.com/sm1ky/luIP-marzban/tree/main#часто-задаваемые-вопросы)
